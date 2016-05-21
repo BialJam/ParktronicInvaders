@@ -3,31 +3,67 @@ using System.Collections;
 
 public class DotController : MonoBehaviour
 {
-    public GameObject DotInControl;
+    public GameObject DotInControl = null;
+    public static int movesAvailable = 1;
+    public bool isInstantiated = false;
     new Rigidbody2D rigidbody2D;
+    public float multiply;
     void Start()
     {
-        //TODO: dodac kropke do kontroli na poczatek gry
-        rigidbody2D = DotInControl.GetComponent<Rigidbody2D>();
+
+    }
+
+    public bool takingControl(GameObject human)
+    {
+        if (human.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Normal && movesAvailable > 0)
+        {
+            DotInControl = human;
+            human.GetComponent<StatusController>().ChangeStatus(StatusController.DotStatus.Controled);
+            Debug.Log("Taking Control");
+            movesAvailable--;
+            rigidbody2D = DotInControl.GetComponent<Rigidbody2D>();
+            isInstantiated = true;
+            return true;
+        }
+        return false;
     }
 
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (DotInControl != null && rigidbody2D != null)
         {
-            rigidbody2D.AddForce(new Vector2(0, 1) * DotInControl.GetComponent<DotStatistics>().movementSpeed);
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            rigidbody2D.AddForce(new Vector2(0, -1) * DotInControl.GetComponent<DotStatistics>().movementSpeed);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            rigidbody2D.AddForce(new Vector2(-1, 0) * DotInControl.GetComponent<DotStatistics>().movementSpeed);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            rigidbody2D.AddForce(new Vector2(1, 0) * DotInControl.GetComponent<DotStatistics>().movementSpeed);
+            bool isMoved = false;
+            Vector2 tmpvec = Vector2.zero;
+            if (Input.GetKey(KeyCode.W))
+            {
+                isMoved = true;
+                tmpvec += new Vector2(0, 1);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                isMoved = true;
+                tmpvec += new Vector2(0, -1);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                isMoved = true;
+                tmpvec += new Vector2(-1, 0);
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                isMoved = true;
+                tmpvec += new Vector2(1, 0);
+            }
+
+            if (isMoved == true)
+            {
+                tmpvec.Normalize();
+                rigidbody2D.velocity = (tmpvec * multiply * DotInControl.GetComponent<DotStatistics>().movementSpeed * Time.deltaTime);
+                rigidbody2D.AddForce(tmpvec * Time.deltaTime * 0.1f);
+            }
+            else
+                rigidbody2D.velocity *= 0.95f;
+
         }
     }
 }

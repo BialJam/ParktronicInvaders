@@ -26,21 +26,36 @@ public class DotAttack : MonoBehaviour
 
     public void OnCollisionStay2D(Collision2D col)
     {
-        if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Normal && col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Poisoned || col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie)
+        if (canAttack && col.gameObject.tag == "Human")
         {
-            col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage);
-        }
-        else if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Enemy &&  col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Controled)
-        {
-            col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage);
-        }
-        else if(GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Poisoned || col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie)
-        {
-            col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage);
-        }
-        else if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie || col.gameObject.GetComponent<StatusController>().currentStatus != StatusController.DotStatus.Zombie)
-        {
-            col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage);
+            if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Normal
+                && col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie)
+            {
+                col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage, gameObject);
+                canAttack = false;
+            }
+            else if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Enemy
+                && col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Controled)
+            {
+                col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage, gameObject);
+                canAttack = false;
+            }
+            else if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Poisoned && col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie)
+            {
+                col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage, gameObject);
+                canAttack = false;
+            }
+            else if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie && col.gameObject.GetComponent<StatusController>().currentStatus != StatusController.DotStatus.Zombie)
+            {
+                col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage, gameObject);
+                canAttack = false;
+            }
+            else if (GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Controled &&  (col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie || col.gameObject.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Enemy) )
+            {
+                col.gameObject.GetComponent<DotStatistics>().ApplyDamage(GetComponent<DotStatistics>().attackDamage, gameObject);
+                canAttack = false;
+            }
+
         }
     }
 }

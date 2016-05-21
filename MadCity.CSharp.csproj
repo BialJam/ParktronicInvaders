@@ -69,16 +69,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AfterMission\AfterCanvasController.cs" />
+    <Compile Include="Assets\CanvasHandler.cs" />
+    <Compile Include="Assets\Menu\MenuController.cs" />
+    <Compile Include="Assets\Menu\SaveLoad.cs" />
     <Compile Include="Assets\ParticleLayer.cs" />
     <Compile Include="Assets\PoisonedLake.cs" />
     <Compile Include="Assets\Prefabs\Dots\Scripts\ColorController.cs" />
     <Compile Include="Assets\Prefabs\Dots\Scripts\DotAttack.cs" />
     <Compile Include="Assets\Prefabs\Dots\Scripts\DotController.cs" />
+    <Compile Include="Assets\Prefabs\Dots\Scripts\DotMoving.cs" />
     <Compile Include="Assets\Prefabs\Dots\Scripts\DotStatistics.cs" />
-    <Compile Include="Assets\Prefabs\Dots\Scripts\ExplosionController.cs" />
+    <Compile Include="Assets\Prefabs\Dots\Scripts\EnemySearching.cs" />
+    <Compile Include="Assets\Prefabs\Dots\Scripts\HumansMovement.cs" />
     <Compile Include="Assets\Prefabs\Dots\Scripts\StatusController.cs" />
     <Compile Include="Assets\Scripts\FiredBuilding.cs" />
+    <Compile Include="Assets\Scripts\HealthSlider.cs" />
     <Compile Include="Assets\Scripts\InventoryPanel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Menu\Day-Night Skyboxes\Textures\Readme for Assigning.txt" />
+    <None Include="Assets\Menu\Day-Night Skyboxes\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

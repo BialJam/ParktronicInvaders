@@ -3,15 +3,15 @@ using System.Collections;
 
 public class ColorController : MonoBehaviour
 {
-    public Material PoisonedMaterial;
-    public Material NormalMaterial;
-    public Material ControledMaterial;
-    public Material ZombieMaterial;
-    public Material EnemyMaterial;
+    public Sprite PoisonedSprite;
+    public Sprite NormalSprite;
+    public Sprite ControledSprite;
+    public Sprite ZombieSprite;
+    public Sprite EnemySprite;
 
     void Start()
     {
-        gameObject.GetComponent<MeshRenderer>().material = ZombieMaterial;
+        GetComponent< SpriteRenderer >().sprite = NormalSprite;
     }
 
     public void ChangeMaterial(StatusController.DotStatus status)
@@ -19,23 +19,23 @@ public class ColorController : MonoBehaviour
         switch(status)
         {
             case StatusController.DotStatus.Controled:
-                gameObject.GetComponent<MeshRenderer>().material = ControledMaterial;
+               GetComponent<SpriteRenderer>().sprite = ControledSprite;
 
                 break;
             case StatusController.DotStatus.Enemy:
-                gameObject.GetComponent<MeshRenderer>().material = EnemyMaterial;
+                GetComponent<SpriteRenderer>().sprite = EnemySprite;
 
                 break;
             case StatusController.DotStatus.Normal:
-                gameObject.GetComponent<MeshRenderer>().material = NormalMaterial;
+                GetComponent<SpriteRenderer>().sprite = NormalSprite;
 
                 break;
             case StatusController.DotStatus.Poisoned:
-                gameObject.GetComponent<MeshRenderer>().material = PoisonedMaterial;
+                GetComponent<SpriteRenderer>().sprite = PoisonedSprite;
 
                 break;
             case StatusController.DotStatus.Zombie:
-                gameObject.GetComponent<MeshRenderer>().material = ZombieMaterial;
+                GetComponent<SpriteRenderer>().sprite = ZombieSprite;
 
                 break;
         }

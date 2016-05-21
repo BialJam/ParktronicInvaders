@@ -7,54 +7,75 @@ public class DotStatistics : MonoBehaviour
     public float attackCooldown;
     public int health;
     public float movementSpeed;
+    public int maxHealth;
+    bool isPoisoned;
+    bool exploding;
+    public GameObject dotController;
 
-    bool isBurning;
+    public bool isBurning;
     float burningTimer;
+    public float poisonTimer;
+    public float goingToPoison;
 
+    public ParticleSystem fireParticles;
     void Start()
     {
+        goingToPoison = 3f;
+        poisonTimer = 0;
+        GetComponent<ParticleSystem>().Pause();
+        exploding = false;
+        fireParticles.Pause();
         isBurning = false;
         burningTimer = 0f;
         isPoisoned = false;
         attackDamage = (int)(Random.Range(0.3f, 0.5f) * 100f);
         attackCooldown = Random.Range(1f, 1.5f);
         health = (int)(Random.Range(1.2f, 1.7f) * 100f);
+        maxHealth = health;
         movementSpeed = Random.Range(1f, 1.2f);
     }
 
     public void Update()
     {
-        if(isBurning)
+        if (exploding) GetComponentInChildren<ParticleSystem>().startSpeed += 1f;
+        if (isBurning)
         {
+            SetOnFireOthers();
             burningTimer += Time.deltaTime;
             if (burningTimer > 1f)
             {
                 burningTimer = 0f;
-                ApplyDamage(20);
+                ApplyDamage(20, null);
             }
         }
 
 
-        if(isPoisoned && GetComponent<StatusController>().currentStatus != StatusController.DotStatus.Zombie)
+        if (isPoisoned && GetComponent<StatusController>().currentStatus != StatusController.DotStatus.Zombie)
         {
+            GetComponent<StatusController>().ChangeStatus(StatusController.DotStatus.Poisoned);
             poisonTimer += Time.deltaTime;
-            if(poisonTimer>10f)
+            if (poisonTimer > 5f)
             {
                 isPoisoned = false;
                 poisonTimer = 0f;
-                GetComponent<StatusController>().ChangeStatus(StatusController.DotStatus.Zombie);
+                ChangeToZombie();
             }
         }
     }
 
     public void Death()
     {
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     public void ChangeToZombie()
     {
         GetComponent<StatusController>().ChangeStatus(StatusController.DotStatus.Zombie);
+        dotController = GameObject.Find("DotController");
+        if (dotController.GetComponent<DotController>().DotInControl == gameObject)
+            dotController.GetComponent<DotController>().DotInControl = null;
+
+
         attackDamage *= 15;
         attackDamage /= 10;
         attackCooldown *= 15;
@@ -67,31 +88,98 @@ public class DotStatistics : MonoBehaviour
 
     public void Explode()
     {
-        //TODO: explosion
-        GetComponentInChildren<Collider2D>().enabled = true;
+        GetComponent<ParticleSystem>().Play();
+        exploding = true;
+
+        var humans = GameObject.FindGameObjectsWithTag("Human");
+
+        foreach (var item in humans)
+        {
+            if (Vector3.Distance(transform.position, item.transform.position) <= 10f)
+                item.GetComponent<DotStatistics>().ApplyDamage((int)((1f - Vector3.Distance(transform.position, item.transform.position) / 10f) * 100), null);
+        }
+        SetOnFireOthers();
+
         Destroy(gameObject, 0.5f);
     }
 
-    public void ApplyDamage(int amount)
+    public void ApplyDamage(int amount, GameObject whoAttacked)
     {
         health -= amount;
-        if(health<=0)
+
+        if (health <= 0)
         {
-            Destroy(gameObject);
+            if (whoAttacked != null && whoAttacked.GetComponent<StatusController>().currentStatus == StatusController.DotStatus.Zombie)
+            {
+                health = maxHealth;
+                float chance = Random.Range(0f, 1f);
+                if (chance > 0.7f)
+                    ChangeToZombie();
+                else
+                    Destroy(gameObject, 0.1f);
+                maxHealth = health;
+            }
+            else
+            {
+                Destroy(gameObject, 0.1f);
+            }
         }
     }
 
-    public void SetOnFire()
+    void SetOnFireOthers()
     {
-        isBurning = true;
-        //TODO: burning particles
+        var humans = GameObject.FindGameObjectsWithTag("Human");
+
+        foreach (var item in humans)
+        {
+            if (Vector3.Distance(transform.position, item.transform.position) <= 5f
+                && item.GetComponent<DotStatistics>().isBurning == false && item != gameObject)
+                item.GetComponent<DotStatistics>().StartFire();
+        }
+
+        var buildings = GameObject.FindGameObjectsWithTag("Building");
+
+        foreach (var item in buildings)
+        {
+            if (Vector3.Distance(transform.position, item.transform.position) <= 15f
+                && item.GetComponent<FiredBuilding>().isFired == false && item.GetComponent<FiredBuilding>().isGoingToFire == false && item != gameObject)
+                item.GetComponent<FiredBuilding>().isGoingToFire = true;
+        }
+    }
+
+    public void StartFire()
+    {
+        StartCoroutine(SetOnFire());
+    }
+
+    public IEnumerator SetOnFire()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (gameObject != null)
+        {
+            isBurning = true;
+            fireParticles.Clear();
+            fireParticles.Play();
+
+            SetOnFireOthers();
+        }
+    }
+
+    public void HammerTime()
+    {
+        attackDamage *= 2;
     }
 
 
-    bool isPoisoned;
-    float poisonTimer = 0f;
     public void StartPoison()
     {
         isPoisoned = true;
+        goingToPoison = 3f;
+    }
+
+    public void StopBurning()
+    {
+        isBurning = false;
+        fireParticles.Stop();
     }
 }
