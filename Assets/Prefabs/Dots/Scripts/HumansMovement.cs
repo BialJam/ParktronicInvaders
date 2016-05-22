@@ -23,12 +23,12 @@ public class HumansMovement : MonoBehaviour
     Vector2 prawyGorny;
     public int GridValue;
 
-    public static bool isRandom = true;
+    public static bool isRandom;
     public static int randomDifficult = 2;
 
     void Start()
     {
-        if (true)
+        if (isRandom)
         {
             lewyDolny = leftBot.position;
             prawyGorny = rightTop.position;
@@ -154,6 +154,13 @@ public class HumansMovement : MonoBehaviour
         //    if (possibleCheckpoints[i].Count == 0)
         //        Debug.Log(checkpoints[i].name);
         //}
+
+
+        Object[] ES = FindObjectsOfType(typeof(FiredBuilding));
+        foreach (var item in ES)
+        {
+            (item as FiredBuilding).OnStart();
+        }
     }
 
     void FixedUpdate()

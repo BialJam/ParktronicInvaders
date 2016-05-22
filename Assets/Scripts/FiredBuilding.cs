@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class FiredBuilding : MonoBehaviour {
+public class FiredBuilding : MonoBehaviour
+{
 
 
     public bool isFired;
@@ -14,7 +15,8 @@ public class FiredBuilding : MonoBehaviour {
     float goingFire;
 
     // Use this for initialization
-    void Start () {
+    public void OnStart()
+    {
         humans = new List<GameObject>(GameObject.FindGameObjectsWithTag("Human"));
         buildings = new List<GameObject>(GameObject.FindGameObjectsWithTag("Building"));
         goingFire = 5f;
@@ -25,9 +27,10 @@ public class FiredBuilding : MonoBehaviour {
         particles.Pause();
     }
 
-	// Update is called once per frame
-	void Update () {
-        if(isGoingToFire)
+    // Update is called once per frame
+    void Update()
+    {
+        if (isGoingToFire)
         {
             goingFire -= Time.deltaTime;
             if (goingFire <= 0)
@@ -36,13 +39,13 @@ public class FiredBuilding : MonoBehaviour {
             }
         }
 
-	    if(isFired)
+        if (isFired)
         {
-            if(particles != null) particles.Play();
+            if (particles != null) particles.Play();
             firingTime -= Time.deltaTime;
             if (firingTime <= 0) Destroy(this.gameObject);
 
-            foreach(var human in humans)
+            foreach (var human in humans)
             {
                 if (human != null)
                 {
@@ -53,7 +56,7 @@ public class FiredBuilding : MonoBehaviour {
                 }
             }
 
-            foreach(var building in buildings)
+            foreach (var building in buildings)
             {
                 if (building != null)
                 {
@@ -64,21 +67,21 @@ public class FiredBuilding : MonoBehaviour {
                 }
             }
         }
-	}
-
-   /* void OnTriggerStay2D(Collider2D coll)
-    {
-        if (coll.gameObject.tag == "Human" && isFired && coll.gameObject.GetComponent<DotStatistics>().isBurning == false)
-        {
-            Debug.Log("Podaj sciezke do skryptu i co uruchomic");
-            coll.gameObject.GetComponent<DotStatistics>().StartFire();
-        }
-
-        if(coll.gameObject.tag == "Building" && isFired)
-        {
-            coll.gameObject.GetComponent<FiredBuilding>().isGoingToFire = true;
-        }
-
     }
-    */
+
+    /* void OnTriggerStay2D(Collider2D coll)
+     {
+         if (coll.gameObject.tag == "Human" && isFired && coll.gameObject.GetComponent<DotStatistics>().isBurning == false)
+         {
+             Debug.Log("Podaj sciezke do skryptu i co uruchomic");
+             coll.gameObject.GetComponent<DotStatistics>().StartFire();
+         }
+
+         if(coll.gameObject.tag == "Building" && isFired)
+         {
+             coll.gameObject.GetComponent<FiredBuilding>().isGoingToFire = true;
+         }
+
+     }
+     */
 }

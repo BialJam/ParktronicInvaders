@@ -8,10 +8,35 @@ public class MenuController : MonoBehaviour
 {
     public List<GameObject> MainMenu;
     public List<GameObject> Scoreboard;
+    public List<GameObject> PlayMenu;
+    public Dropdown randomDropdown;
+    public Dropdown levelDropdown;
 
-    public void StartGame()
+    public void StartRandom()
     {
+        HumansMovement.randomDifficult = randomDropdown.value;
+        HumansMovement.isRandom = true;
         SceneManager.LoadScene("City1");
+
+    }
+
+    public void StartLevel()
+    {
+        HumansMovement.randomDifficult = 2;
+        HumansMovement.isRandom = true;
+        SceneManager.LoadScene(string.Format("City{0}", levelDropdown.value));
+    }
+
+    public void ShowPlayMenu()
+    {
+        foreach (var item in MainMenu)
+        {
+            item.SetActive(false);
+        }
+        foreach (var item in PlayMenu)
+        {
+            item.SetActive(true);
+        }
     }
 
     public void ShowScoreboard()
@@ -45,6 +70,10 @@ public class MenuController : MonoBehaviour
     public void BackToMainMenu()
     {
         foreach (var item in Scoreboard)
+        {
+            item.SetActive(false);
+        }
+        foreach (var item in PlayMenu)
         {
             item.SetActive(false);
         }
