@@ -16,10 +16,12 @@ public class DotStatistics : MonoBehaviour
     float burningTimer;
     public float poisonTimer;
     public float goingToPoison;
+    float fireImmortality;
 
     public ParticleSystem fireParticles;
     void Start()
     {
+        fireImmortality = 0f;
         goingToPoison = 3f;
         poisonTimer = 0;
         GetComponent<ParticleSystem>().Pause();
@@ -40,12 +42,16 @@ public class DotStatistics : MonoBehaviour
         if (exploding) GetComponentInChildren<ParticleSystem>().startSpeed += 1f;
         if (isBurning)
         {
-            SetOnFireOthers();
+            fireImmortality += Time.deltaTime;
             burningTimer += Time.deltaTime;
             if (burningTimer > 1f)
             {
                 burningTimer = 0f;
                 ApplyDamage(20, null);
+            }
+            if(fireImmortality > 2f)
+            {
+                SetOnFireOthers();
             }
         }
 
@@ -134,7 +140,14 @@ public class DotStatistics : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, item.transform.position) <= 5f
                 && item.GetComponent<DotStatistics>().isBurning == false && item != gameObject)
-                item.GetComponent<DotStatistics>().StartFire();
+            {
+                if(item.GetComponent<DotStatistics>().isBurning == false)
+                {
+                    item.GetComponent<DotStatistics>().StartFire();
+                }
+
+            }
+                  
         }
 
         var buildings = GameObject.FindGameObjectsWithTag("Building");
@@ -154,13 +167,12 @@ public class DotStatistics : MonoBehaviour
 
     public IEnumerator SetOnFire()
     {
-        yield return new WaitForSeconds(1.5f);
-        if (gameObject != null)
+        if (gameObject != null && !isBurning)
         {
             isBurning = true;
             fireParticles.Clear();
             fireParticles.Play();
-
+            yield return new WaitForSeconds(2f);
             SetOnFireOthers();
         }
     }
@@ -179,7 +191,9 @@ public class DotStatistics : MonoBehaviour
 
     public void StopBurning()
     {
+        fireImmortality = 0f;
         isBurning = false;
         fireParticles.Stop();
+        fireParticles.Clear();
     }
 }

@@ -161,6 +161,8 @@ public class HumansMovement : MonoBehaviour
         {
             (item as FiredBuilding).OnStart();
         }
+
+        gameObject.GetComponent<PlayConditions>().OnStart();
     }
 
     void FixedUpdate()

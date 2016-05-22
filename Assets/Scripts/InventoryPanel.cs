@@ -19,7 +19,8 @@ public class InventoryPanel : MonoBehaviour {
 	};
 	typeOfClick LeftMouseButtonClick = typeOfClick.takeControl; //jeszcze w starcie jest przypisana wartosc
 
-    int controlsLeft, bombsLeft, poisonsLeft, hammersLeft, matchesLeft, shitsLeft;
+    public int controlsLeft;
+    int bombsLeft, poisonsLeft, hammersLeft, matchesLeft, shitsLeft;
 
 	public void SetItemQuantity(int controls, int Bombs, int poisons, int hammers, int matches, int shits)
 	{

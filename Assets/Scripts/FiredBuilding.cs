@@ -51,7 +51,8 @@ public class FiredBuilding : MonoBehaviour
                 {
                     if (Vector3.Distance(transform.position, human.transform.position) <= 20f)
                     {
-                        human.GetComponent<DotStatistics>().StartFire();
+                        if (human.GetComponent<DotStatistics>().isBurning == false)
+                            human.GetComponent<DotStatistics>().StartFire();
                     }
                 }
             }
@@ -62,7 +63,8 @@ public class FiredBuilding : MonoBehaviour
                 {
                     if (Vector3.Distance(transform.position, building.transform.position) <= 20f)
                     {
-                        building.GetComponent<FiredBuilding>().isGoingToFire = true;
+                        if(building.GetComponent<FiredBuilding>().isGoingToFire == false && building.GetComponent<FiredBuilding>().isFired == false)
+                            building.GetComponent<FiredBuilding>().isGoingToFire = true;
                     }
                 }
             }
