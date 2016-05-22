@@ -35,10 +35,6 @@ public class PoisonedLake : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D coll)
     {
-        if(coll.gameObject.tag == "Lake")
-        {
-            coll.gameObject.GetComponent<PoisonedLake>().isPoisoned = true;
-        }
         coll.gameObject.GetComponent<DotStatistics>().StopBurning();
         if (coll.gameObject.tag == "Human" && isPoisoned)
         {
@@ -50,8 +46,6 @@ public class PoisonedLake : MonoBehaviour
 
         }
     }
-
-
 }
 
 

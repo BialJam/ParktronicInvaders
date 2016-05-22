@@ -23,7 +23,7 @@ public class MenuController : MonoBehaviour
     public void StartLevel()
     {
         HumansMovement.randomDifficult = 2;
-        HumansMovement.isRandom = false;
+        HumansMovement.isRandom = true;
         SceneManager.LoadScene(string.Format("City{0}", levelDropdown.value));
     }
 

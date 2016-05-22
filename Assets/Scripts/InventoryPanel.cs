@@ -1,69 +1,72 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-public class InventoryPanel : MonoBehaviour {
-    
+public class InventoryPanel : MonoBehaviour
+{
+
     public GameObject hoverImage;
     public DotController dotController;
     GameObject lasthito;
     private bool doneSomethingBad = false;
+    public bool czyWidoczne = false;
 
     enum typeOfClick
-	{
-		takeControl,
-		giveBomb,
-		givePoison,
-		giveHammer,
-		giveMatch,
-		giveShit
-	};
-	typeOfClick LeftMouseButtonClick = typeOfClick.takeControl; //jeszcze w starcie jest przypisana wartosc
+    {
+        takeControl,
+        giveBomb,
+        givePoison,
+        giveHammer,
+        giveMatch,
+        giveShit
+    };
+    typeOfClick LeftMouseButtonClick = typeOfClick.takeControl; //jeszcze w starcie jest przypisana wartosc
 
     public int controlsLeft;
     int bombsLeft, poisonsLeft, hammersLeft, matchesLeft, shitsLeft;
 
-	public void SetItemQuantity(int controls, int Bombs, int poisons, int hammers, int matches, int shits)
-	{
+    public void SetItemQuantity(int controls, int Bombs, int poisons, int hammers, int matches, int shits)
+    {
         controlsLeft = controls;
         bombsLeft = Bombs;
         poisonsLeft = poisons;
         hammersLeft = hammers;
         matchesLeft = matches;
         shitsLeft = shits;
-	}
+    }
 
-	void OnGUI()
-	{
-		for(int i=0; i<5; i++)
-		{
-			//int przedmiot = 0;
-									//napisy na buttonie
-			string buttonNapis = "Bomba" + ", Left: " + bombsLeft;
-			if (i == 1)
-				buttonNapis = "Trucizna" + ", Left: " + poisonsLeft;
-			else if(i == 2)
-				buttonNapis = "Mlotek" + ", Left: " + hammersLeft;
-			else if (i == 3)
-				buttonNapis = "Zapalka" + ", Left: " + matchesLeft;
-			else if (i == 4)
-				buttonNapis = "Kupa" + ", Left: " + shitsLeft;
-									//koniec napisow na buttonie
+    void OnGUI()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            //int przedmiot = 0;
+            //napisy na buttonie
+            string buttonNapis = "Bomba" + ", Left: " + bombsLeft;
+            if (i == 1)
+                buttonNapis = "Trucizna" + ", Left: " + poisonsLeft;
+            else if (i == 2)
+                buttonNapis = "Mlotek" + ", Left: " + hammersLeft;
+            else if (i == 3)
+                buttonNapis = "Zapalka" + ", Left: " + matchesLeft;
+            else if (i == 4)
+                buttonNapis = "Kupa" + ", Left: " + shitsLeft;
+            //koniec napisow na buttonie
 
-			if (GUI.Button(new Rect(Screen.width * 0.9f, Screen.height * i * 0.2f, Screen.width * 0.1f, Screen.height * 0.2f), 
+            if (GUI.Button(new Rect(Screen.width * 0.9f, Screen.height * i * 0.2f, Screen.width * 0.1f, Screen.height * 0.2f),
                 buttonNapis))          //only bombs for everything
-			{
-				if(buttonNapis == "Bomba" + ", Left: " + bombsLeft)
-				{
-					LeftMouseButtonClick = typeOfClick.giveBomb;
-				}
-				else if (buttonNapis == "Trucizna" + ", Left: " + poisonsLeft)
-				{
-					LeftMouseButtonClick = typeOfClick.givePoison;
-				}
-				else if (buttonNapis == "Zapalka" + ", Left: " + matchesLeft)
-				{
-					LeftMouseButtonClick = typeOfClick.giveMatch;
-				}
+            {
+                if (buttonNapis == "Bomba" + ", Left: " + bombsLeft)
+                {
+                    LeftMouseButtonClick = typeOfClick.giveBomb;
+                }
+                else if (buttonNapis == "Trucizna" + ", Left: " + poisonsLeft)
+                {
+                    LeftMouseButtonClick = typeOfClick.givePoison;
+                }
+                else if (buttonNapis == "Zapalka" + ", Left: " + matchesLeft)
+                {
+                    LeftMouseButtonClick = typeOfClick.giveMatch;
+                }
                 else if (buttonNapis == "Kupa" + ", Left: " + shitsLeft)
                 {
                     LeftMouseButtonClick = typeOfClick.giveShit;
@@ -73,32 +76,48 @@ public class InventoryPanel : MonoBehaviour {
                     LeftMouseButtonClick = typeOfClick.giveHammer;
                 }
                 GUI.TextField(new Rect(Screen.width * 0.4f, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.2f), "Wybrano cos");
-			}
-		}
-        if(LeftMouseButtonClick != typeOfClick.takeControl)
+            }
+        }
+        if (LeftMouseButtonClick != typeOfClick.takeControl)
         {
-            if(GUI.Button(new Rect(Screen.width * 0.8f, Screen.height * 0.8f, Screen.width * 0.1f, Screen.height * 0.2f), "Cancel this ability"))
+            if (GUI.Button(new Rect(Screen.width * 0.8f, Screen.height * 0.8f, Screen.width * 0.1f, Screen.height * 0.2f), "Cancel this ability"))
             {
                 LeftMouseButtonClick = typeOfClick.takeControl;
             }
         }
-	}
-	
-	void Start () {
-		LeftMouseButtonClick = typeOfClick.takeControl; //jeszcze po enumie jest przypisana wartosc (i deklaracja)
+
+        if (czyWidoczne)
+        {
+            if (GUI.Button(new Rect(Screen.width * 0.3f, Screen.height * 0.4f, Screen.width * 0.2f, Screen.height * 0.2f), "Restart Game"))
+            {
+                (FindObjectOfType(typeof(PlayConditions)) as PlayConditions).RestartLevel();
+            }
+            if (GUI.Button(new Rect(Screen.width * 0.5f, Screen.height * 0.4f, Screen.width * 0.2f, Screen.height * 0.2f), "Next Level"))
+            {
+                (FindObjectOfType(typeof(PlayConditions)) as PlayConditions).EndLevel();
+            }
+        }
+    }
+
+    void Start()
+    {
+        LeftMouseButtonClick = typeOfClick.takeControl; //jeszcze po enumie jest przypisana wartosc (i deklaracja)
         SetItemQuantity(1, 2, 2, 1, 1, 1);
+        Debug.Log("asdaf;JAHF;JlhdfpF");
         lasthito = null;
         doneSomethingBad = false;
+        czyWidoczne = false;
     }
-	
-	void Update () {
+
+    void Update()
+    {
         if (Input.GetKeyDown(KeyCode.Mouse1))
-		{
-			RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        {
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
             if (hit.transform != null && hit.transform.gameObject.layer == 10)
-			{
-				GameObject human = hit.transform.gameObject;
+            {
+                GameObject human = hit.transform.gameObject;
                 Debug.Log(LeftMouseButtonClick);
                 if (LeftMouseButtonClick == typeOfClick.takeControl && controlsLeft > 0)
                 {
@@ -146,7 +165,7 @@ public class InventoryPanel : MonoBehaviour {
                         LeftMouseButtonClick = typeOfClick.takeControl;
                     }
                 }
-			}
+            }
             if (hit.collider != null && hit.transform.gameObject.layer == 8)
             {
                 GameObject house = hit.transform.gameObject;
@@ -161,7 +180,7 @@ public class InventoryPanel : MonoBehaviour {
                     }
                 }
             }
-            if(hit.transform != null && hit.transform.gameObject.layer == 4)
+            if (hit.transform != null && hit.transform.gameObject.layer == 4)
             {
                 GameObject lake = hit.transform.gameObject;
                 if (dotController.isInstantiated && dotController.DotInControl != null && Vector3.Distance(dotController.DotInControl.transform.position, lake.transform.position) <= 20)
@@ -175,7 +194,7 @@ public class InventoryPanel : MonoBehaviour {
                     }
                 }
             }
-            if(doneSomethingBad)
+            if (doneSomethingBad)
             {
                 doneSomethingBad = false;
                 dotController.DotInControl.GetComponent<StatusController>().TagEnemies();
@@ -183,21 +202,21 @@ public class InventoryPanel : MonoBehaviour {
         }
 
         RaycastHit2D hito = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if(hito.collider != null && hito.transform.gameObject.layer == 10)
+        if (hito.collider != null && hito.transform.gameObject.layer == 10)
         {
             if (lasthito != null)
             {
                 lasthito.transform.SetParent(null);
                 Destroy(lasthito);
             }
-            GameObject hover = (GameObject)Instantiate(hoverImage, Camera.main.ScreenToWorldPoint(Input.mousePosition), new Quaternion(0,0,0,0));
+            GameObject hover = (GameObject)Instantiate(hoverImage, Camera.main.ScreenToWorldPoint(Input.mousePosition), new Quaternion(0, 0, 0, 0));
 
             hover.transform.SetParent(hito.transform);
             hover.transform.localPosition = new Vector3(0, 0, 0);
 
             lasthito = hover;
         }
-        else if(lasthito != null)
+        else if (lasthito != null)
         {
             lasthito.transform.SetParent(null);
             Destroy(lasthito);

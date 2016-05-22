@@ -10,10 +10,10 @@ public class PlayConditions : MonoBehaviour
     List<FiredBuilding> firedBuildings;
 
     float timer = 0f;
-    public GameObject RestartButton;
 
     public void OnStart()
     {
+        Time.timeScale = 1f;
         AfterCanvasController.currentScore = 0;
 
         humans = new List<GameObject>(GameObject.FindGameObjectsWithTag("Human"));
@@ -90,7 +90,8 @@ public class PlayConditions : MonoBehaviour
             {
                 AfterCanvasController.currentScore += 10000;
                 Time.timeScale = 0f;
-                RestartButton.SetActive(true);
+                (FindObjectOfType(typeof(InventoryPanel)) as InventoryPanel).czyWidoczne = true;
+
             }
             else if (numberOfPoisoned == 0 && numberOfEnemy == 0 && numberOfZombies == 0 && numberOfControled == 0
                 && (FindObjectOfType(typeof(InventoryPanel)) as InventoryPanel).controlsLeft == 0)
@@ -152,7 +153,8 @@ public class PlayConditions : MonoBehaviour
                 {
                     AfterCanvasController.currentScore -= 10000;
                     Time.timeScale = 0f;
-                    RestartButton.SetActive(true);
+                    (FindObjectOfType(typeof(InventoryPanel)) as InventoryPanel).czyWidoczne = true;
+
                 }
             }
         }
@@ -161,5 +163,10 @@ public class PlayConditions : MonoBehaviour
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void EndLevel()
+    {
+        SceneManager.LoadScene("AfterMisiion");
     }
 }
